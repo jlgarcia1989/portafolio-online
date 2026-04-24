@@ -177,13 +177,16 @@
         };
 
         class AirtableService {
-            constructor(config) {
-                this.baseUrl = `https://api.airtable.com/v0/${config.BASE_ID}`;
-                this.headers = { 'Authorization': `Bearer ${config.API_KEY}` };
+            constructor() {
+                // Determine if we are running on the server or locally
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                // Use relative path for proxy
+                this.baseUrl = '/api/airtable'; 
             }
 
             async fetchTable(tableId) {
-                const response = await fetch(`${this.baseUrl}/${tableId}`, { headers: this.headers });
+                // The API key is now securely handled by the Node backend
+                const response = await fetch(`${this.baseUrl}/${tableId}`);
                 if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
                 const data = await response.json();
                 return data.records.map(r => r.fields);
@@ -215,7 +218,7 @@
 
         class CVOrchestrator {
             constructor() {
-                this.service = new AirtableService(CONFIG.AIRTABLE);
+                this.service = new AirtableService();
             }
 
             async init() {

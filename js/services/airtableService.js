@@ -10,12 +10,7 @@ import { CONFIG } from '../config.js';
 
 class AirtableService {
     constructor() {
-        this.baseId = CONFIG.AIRTABLE.BASE_ID;
-        this.apiKey = CONFIG.AIRTABLE.API_KEY;
-        this.headers = {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json'
-        };
+        this.baseUrl = '/api/airtable';
     }
 
     /**
@@ -28,9 +23,8 @@ class AirtableService {
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
         try {
-            const url = `https://api.airtable.com/v0/${this.baseId}/${tableName}`;
+            const url = `${this.baseUrl}/${tableName}`;
             const response = await fetch(url, {
-                headers: this.headers,
                 signal: controller.signal
             });
 
