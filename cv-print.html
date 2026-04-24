@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julian Garcia - CV Premium Senior</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --print-width: 210mm;
+            --print-height: 297mm;
+            --sidebar-width: 65mm;
+            --accent-color: #3b82f6;
+            --bg-dark: #030303;
+            --bg-sidebar: #080808;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            /* Compatibilidad Total para Impresión de Fondos */
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+
+        #cv-content {
+            width: var(--print-width);
+            background-color: var(--bg-dark);
+            display: flex;
+            position: relative;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--bg-sidebar) 0%, var(--bg-dark) 100%);
+            border-right: 1px solid var(--border-color);
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(var(--print-height) * 2);
+        }
+
+        .profile-wrapper { width: 100px; height: 100px; margin: 0 auto 20px; }
+        .profile-img-circle {
+            width: 100%; height: 100%; border-radius: 50%;
+            object-fit: cover; border: 2px solid var(--accent-color);
+            padding: 3px; background: var(--bg-dark);
+        }
+
+        .main-content {
+            flex: 1; padding: 30px; display: flex; flex-direction: column; gap: 20px;
+            min-height: calc(var(--print-height) * 2);
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 2px; color: var(--text-main); margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+
+        .item { margin-bottom: 12px; page-break-inside: avoid; }
+        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+        .item-title { font-weight: 700; font-size: 12.5px; color: var(--text-main); }
+        .item-date { font-size: 9px; color: var(--accent-color); font-weight: 600; }
+        .item-sub { font-size: 10px; color: var(--text-dim); margin-bottom: 3px; }
+        .item-desc { font-size: 9.5px; color: #cbd5e1; line-height: 1.4; text-align: justify; }
+
+        .lab-item {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color);
+            padding: 10px; border-radius: 6px; margin-bottom: 10px; page-break-inside: avoid;
+        }
+        .lab-title { font-size: 11px; font-weight: 700; color: var(--accent-color); margin-bottom: 3px; }
+        .lab-stack { font-size: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        .pill { 
+            background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 2px 6px; border-radius: 3px; font-size: 8px; color: var(--text-dim);
+            text-transform: uppercase; font-weight: 600; margin-right: 4px; margin-bottom: 4px; display: inline-block;
+        }
+
+        .signature-section { margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+    <div id="cv-content">
+        <aside class="sidebar">
+            <div class="profile-wrapper">
+                <img src="assets/profile.png" class="profile-img-circle" alt="Julian Garcia">
+            </div>
+            <div style="text-align:center; font-family:'Montserrat'; font-weight:800; font-size:18px; margin-bottom:25px;">
+                JG<span style="color:var(--accent-color);">.</span>
+            </div>
+            
+            <section style="margin-bottom: 25px;">
+                <h3 class="section-title">Contacto</h3>
+                <div id="contact-list"></div>
+            </section>
+
+            <section style="margin-bottom: 25px;">
+                <h3 class="section-title">Perfil Senior</h3>
+                <div id="availability-list" style="font-size:9px; color:var(--text-dim); line-height:1.6;">
+                    <p style="margin-bottom:4px;"><i class="fa fa-plane" style="color:var(--accent-color); width:14px;"></i> Disponibilidad Viajes</p>
+                    <p style="margin-bottom:4px;"><i class="fa fa-passport" style="color:var(--accent-color); width:14px;"></i> Pasaporte Vigente</p>
+                    <p style="margin-bottom:4px;"><i class="fa fa-car" style="color:var(--accent-color); width:14px;"></i> Vehículo Propio</p>
+                    <p><i class="fa fa-shield-halved" style="color:var(--accent-color); width:14px;"></i> Libreta Militar 1ª Clase</p>
+                </div>
+            </section>
+
+            <section style="margin-bottom: 25px;">
+                <h3 class="section-title">Formación</h3>
+                <div id="education-list" style="font-size:9px; color:var(--text-dim);"></div>
+            </section>
+
+            <section>
+                <h3 class="section-title">Stack Técnico</h3>
+                <div id="skills-list"></div>
+            </section>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1 id="user-name" style="font-size: 26px; font-weight: 800; letter-spacing: -1px; margin-bottom: 2px;"></h1>
+                <p id="user-role" style="color: var(--accent-color); font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px;"></p>
+                <div id="user-summary" style="font-size: 10px; color: #cbd5e1; line-height: 1.5; border-left: 2px solid var(--accent-color); padding-left: 12px;"></div>
+            </header>
+
+            <section id="exp-container">
+                <h3 class="section-title">Trayectoria Profesional (+13 Años)</h3>
+                <div id="experience-list"></div>
+            </section>
+
+            <section id="projects-container">
+                <h3 class="section-title">Proyectos Estratégicos</h3>
+                <div id="projects-list"></div>
+            </section>
+
+            <section id="lab-container">
+                <h3 class="section-title">Laboratorio de Metodologías</h3>
+                <div id="methodologies-list"></div>
+            </section>
+
+            <div class="signature-section">
+                <img id="signature-display" src="" style="max-height: 40px; margin-bottom: 5px; filter: brightness(1.5);" alt="Firma">
+                <div style="font-size: 9px; color: var(--text-dim);">
+                    <strong id="sig-name" style="color: #fff; display: block; font-size: 10px;"></strong>
+                    <span id="sig-id"></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        /**
+         * @fileoverview CV Premium Data Orchestrator
+         * Sigue principios SOLID (SRP, ISP) y Clean Code.
+         */
+        import { CONFIG } from './js/config.js';
+
+        const TABLES = {
+            PROFILE: 'tbljXD6t94CrciNfY',
+            EXPERIENCE: 'tblhfy79NxXwYR2lx',
+            EDUCATION: 'tblOTJIY7nVmorarq',
+            SKILLS: 'tblnBsRPjjTlBzO7g',
+            PROJECTS: 'tbld0xgYdNt2h2MLw',
+            METHODS: 'tbl7wRJ4nRr6Sf9IF'
+        };
+
+        class AirtableService {
+            constructor(config) {
+                this.baseUrl = `https://api.airtable.com/v0/${config.BASE_ID}`;
+                this.headers = { 'Authorization': `Bearer ${config.API_KEY}` };
+            }
+
+            async fetchTable(tableId) {
+                const response = await fetch(`${this.baseUrl}/${tableId}`, { headers: this.headers });
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                const data = await response.json();
+                return data.records.map(r => r.fields);
+            }
+        }
+
+        class CVRenderer {
+            static setText(id, text) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = text;
+            }
+
+            static renderList(id, items, templateFn) {
+                const container = document.getElementById(id);
+                if (!container) return;
+                container.innerHTML = items.map(templateFn).join('');
+            }
+
+            static renderSkills(id, skillRecords) {
+                const container = document.getElementById(id);
+                if (!container) return;
+                const allSkills = skillRecords.flatMap(r => (r.SkillList || "").split(','));
+                container.innerHTML = allSkills
+                    .filter(s => s.trim())
+                    .map(s => `<span class="pill">${s.trim()}</span>`)
+                    .join('');
+            }
+        }
+
+        class CVOrchestrator {
+            constructor() {
+                this.service = new AirtableService(CONFIG.AIRTABLE);
+            }
+
+            async init() {
+                try {
+                    const [profile, exp, edu, skills, projects, methods] = await Promise.all([
+                        this.service.fetchTable(TABLES.PROFILE),
+                        this.service.fetchTable(TABLES.EXPERIENCE),
+                        this.service.fetchTable(TABLES.EDUCATION),
+                        this.service.fetchTable(TABLES.SKILLS),
+                        this.service.fetchTable(TABLES.PROJECTS),
+                        this.service.fetchTable(TABLES.METHODS)
+                    ]);
+
+                    this.renderProfile(profile[0]);
+                    this.renderExperience(exp);
+                    this.renderEducation(edu);
+                    this.renderProjects(projects);
+                    this.renderMethodologies(methods);
+                    CVRenderer.renderSkills('skills-list', skills);
+
+                    window.cvDataReady = true;
+                } catch (error) {
+                    console.error("Critical CV Error:", error);
+                    window.cvDataReady = true;
+                }
+            }
+
+            renderProfile(user) {
+                CVRenderer.setText('user-name', user.Name);
+                CVRenderer.setText('sig-name', user.Name);
+                CVRenderer.setText('user-role', user.Role);
+                CVRenderer.setText('user-summary', user.Summary);
+                CVRenderer.setText('sig-id', `${user.DocType} ${user.DocNumber}`);
+                
+                const contactHtml = `
+                    <p style="margin-bottom:4px; font-size:9px; color:var(--text-dim);"><i class="fa fa-envelope" style="color:var(--accent-color); width:14px;"></i> ${user.Email}</p>
+                    <p style="margin-bottom:4px; font-size:9px; color:var(--text-dim);"><i class="fa fa-phone" style="color:var(--accent-color); width:14px;"></i> ${user.Phone}</p>
+                    <p style="font-size:9px; color:var(--text-dim);"><i class="fa fa-location-dot" style="color:var(--accent-color); width:14px;"></i> ${user.Location || 'Bogotá, CO'}</p>
+                `;
+                document.getElementById('contact-list').innerHTML = contactHtml;
+
+                if (user.SignatureAttachment?.[0]) {
+                    document.getElementById('signature-display').src = user.SignatureAttachment[0].url;
+                }
+            }
+
+            renderExperience(exp) {
+                const sorted = exp.sort((a,b) => b.Period.split(' ').pop().localeCompare(a.Period.split(' ').pop()));
+                CVRenderer.renderList('experience-list', sorted, f => `
+                    <div class="item">
+                        <div class="item-header">
+                            <span class="item-title">${f.Role}</span>
+                            <span class="item-date">${f.Period}</span>
+                        </div>
+                        <div class="item-sub">${f.Company}</div>
+                        <p class="item-desc">${f.Description}</p>
+                    </div>
+                `);
+            }
+
+            renderEducation(edu) {
+                CVRenderer.renderList('education-list', edu, f => `
+                    <div style="margin-bottom:8px;">
+                        <div style="color:#fff; font-weight:700;">${f.Degree}</div>
+                        <div>${f.Institution}</div>
+                    </div>
+                `);
+            }
+
+            renderProjects(projects) {
+                CVRenderer.renderList('projects-list', projects, f => `
+                    <div class="item">
+                        <div class="item-title" style="color:var(--accent-color);">${f.Title}</div>
+                        <div class="item-sub" style="font-size:8px;">${f.TechStack}</div>
+                        <p class="item-desc">${f.Description}</p>
+                    </div>
+                `);
+            }
+
+            renderMethodologies(methods) {
+                CVRenderer.renderList('methodologies-list', methods, f => `
+                    <div class="lab-item">
+                        <div class="lab-title">${f.Title}</div>
+                        <p class="item-desc" style="margin-bottom:3px;">${f.Summary || ''}</p>
+                        <div class="lab-stack">Stack: ${f.Stack || ''}</div>
+                    </div>
+                `);
+            }
+        }
+
+        // Initialize
+        new CVOrchestrator().init();
+    </script>
+</body>
+</html>

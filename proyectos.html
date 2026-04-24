@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Portafolio de Proyectos | Soluciones QA de Alto Impacto</title>
+    <meta name="description" content="Galería de casos de éxito y laboratorios de experimentación en calidad de software realizados por Julian Garcia.">
+    <meta name="keywords" content="QA Senior, Engineering, Julian Garcia, Automation, Software Quality">
+    <link rel="canonical" href="https://juliangarcia-portfolio.com/proyectos.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://juliangarcia-portfolio.com/proyectos.html">
+    <meta property="og:title" content="Portafolio de Proyectos | Soluciones QA de Alto Impacto">
+    <meta property="og:description" content="Galería de casos de éxito y laboratorios de experimentación en calidad de software realizados por Julian Garcia.">
+    <meta property="og:image" content="https://juliangarcia-portfolio.com/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://juliangarcia-portfolio.com/proyectos.html">
+    <meta property="twitter:title" content="Portafolio de Proyectos | Soluciones QA de Alto Impacto">
+    <meta property="twitter:description" content="Galería de casos de éxito y laboratorios de experimentación en calidad de software realizados por Julian Garcia.">
+    <meta property="twitter:image" content="https://juliangarcia-portfolio.com/assets/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Julian Leonardo Garcia Garzon",
+      "jobTitle": "Senior QA Specialist & Systems Engineer",
+      "url": "https://juliangarcia-portfolio.com",
+      "sameAs": [
+        "https://www.linkedin.com/in/julian-leonardo-garcia-garzon-326818146"
+      ]
+    }
+    </script>
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/sections.css">
+    
+    <!-- Iconos (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        .project-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+        }
+
+        /* Slider Styles */
+        .lab-slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 40px;
+            background: var(--bg-card);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .lab-slider {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            padding: 60px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 968px) {
+            .slide { 
+                grid-template-columns: 1fr; 
+                padding: 40px 20px 80px; 
+                gap: 30px;
+            }
+        }
+
+        .slide-content h3 {
+            font-size: clamp(20px, 5vw, 28px);
+            margin-bottom: 15px;
+            color: var(--color-primary);
+        }
+
+        .slide-content p {
+            color: var(--color-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        /* Code Window inside Slider */
+        .code-window {
+            background: #121212;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .code-header {
+            background: #1a1a1a;
+            padding: 12px 18px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        .code-content {
+            padding: 25px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            color: #d4d4d4;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        /* Syntax Highlight */
+        .keyword { color: #ff7b72; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; }
+        .function { color: #d2a8ff; }
+
+        /* Slider Controls */
+        .slider-controls {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .slider-controls {
+                right: 50%;
+                transform: translateX(50%);
+                bottom: 20px;
+            }
+        }
+
+        .slider-btn {
+            background: var(--color-card);
+            border: 1px solid var(--border-color);
+            color: var(--color-text);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slider-btn:hover {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .tech-stack-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 22px;
+            color: var(--color-muted);
+        }
+
+        .tech-stack-icons i:hover {
+            color: var(--color-primary);
+            transform: translateY(-3px);
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+<body>
+        <header class="navbar" role="banner"></header>
+
+    <main>
+        <section class="section-spacing reveal-on-scroll">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Portafolio de Proyectos</h2>
+                    <p class="subtitle">Desarrollo estratégico y soluciones QA centralizadas.</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- AppDoor -->
+                    <article class="card project-card" style="padding: 0; overflow: hidden;">
+                        <div style="background: var(--bg-card); height: 200px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);">
+                            <i class="fa-solid fa-car-side" style="font-size: 80px; color: var(--color-primary); opacity: 0.5;"></i>
+                        </div>
+                        <div style="padding: 25px;">
+                            <span class="project-status">En Desarrollo</span>
+                            <h3>AppDoor</h3>
+                            <p>Plataforma de **transporte puerta a puerta** para pasajeros, mascotas y encomiendas. Solución integral de movilidad urbana e intermunicipal con seguimiento GPS y estándares de seguridad avanzados.</p>
+                            <div class="tech-stack-icons">
+                                <i class="fa-brands fa-react" title="React"></i>
+                                <i class="fa-solid fa-paw" title="Pet Friendly"></i>
+                                <i class="fa-solid fa-box-open" title="Encomiendas"></i>
+                                <i class="fa-solid fa-location-crosshairs" title="GPS Real-time"></i>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Sentinela QA -->
+                    <article class="card project-card" style="padding: 0; overflow: hidden;">
+                        <div style="background: var(--bg-card); height: 200px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);">
+                            <i class="fa-solid fa-chart-pie" style="font-size: 80px; color: var(--color-primary); opacity: 0.5;"></i>
+                        </div>
+                        <div style="padding: 25px;">
+                            <span class="project-status">En Desarrollo</span>
+                            <h3>Sentinela QA</h3>
+                            <p>Ecosistema centralizado que unifica **todo tipo de pruebas**. Genera reportes automáticos en un **Dashboard inteligente** optimizado para Copywriting y análisis ejecutivo de calidad.</p>
+                            <div class="tech-stack-icons">
+                                <i class="fa-solid fa-vial-circle-check" title="Cypress/Selenium"></i>
+                                <i class="fa-solid fa-gauge-high" title="Performance"></i>
+                                <i class="fa-solid fa-laptop-code" title="Dashboarding"></i>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Portafy -->
+                    <article class="card project-card" style="padding: 0; overflow: hidden;">
+                        <div style="background: var(--bg-card); height: 200px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color);">
+                            <i class="fa-solid fa-file-invoice" style="font-size: 80px; color: var(--color-primary); opacity: 0.5;"></i>
+                        </div>
+                        <div style="padding: 25px;">
+                            <span class="project-status">En Desarrollo</span>
+                            <h3>Portafy</h3>
+                            <p>Generador automático de portafolios a partir de la carga de un **CV en PDF**. Crea una identidad digital instantánea y genera un CV descargable alineado al diseño visual del sitio.</p>
+                            <div class="tech-stack-icons">
+                                <i class="fa-solid fa-file-pdf" title="PDF Parsing"></i>
+                                <i class="fa-solid fa-wand-magic-sparkles" title="Auto Generation"></i>
+                                <i class="fa-solid fa-share-nodes" title="Social Identity"></i>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="section-header" style="margin-top: 80px;">
+                    <h2 class="section-title">Laboratorio de Metodologías</h2>
+                    <p class="subtitle">Explora el código y los frameworks que definen mi estándar de calidad.</p>
+                </div>
+
+                <!-- SLIDER DE METODOLOGÍAS -->
+                <div class="lab-slider-container">
+                    <div class="lab-slider" id="labSlider">
+                        
+                        <!-- Slide 1: E2E Automation -->
+                        <div class="slide">
+                            <div class="slide-content">
+                                <span class="project-status">Frameworks E2E</span>
+                                <h3>Automatización End-to-End</h3>
+                                <p>Implementación de flujos completos de usuario garantizando que cada componente funcione en armonía. Dominio de stacks modernos para robustez y escalabilidad.</p>
+                                <ul style="list-style: none; padding: 0; color: var(--color-muted); font-size: 14px;">
+                                    <li><i class="fa-solid fa-check color-primary" style="margin-right: 10px;"></i> **Cypress**: Velocidad y consistencia en el navegador.</li>
+                                    <li><i class="fa-solid fa-check color-primary" style="margin-right: 10px;"></i> **Selenium / Webdriver**: Estándar industrial multi-lenguaje.</li>
+                                    <li><i class="fa-solid fa-check color-primary" style="margin-right: 10px;"></i> **Playwright**: Pruebas rápidas y confiables entre navegadores.</li>
+                                </ul>
+                            </div>
+                            <div class="code-window">
+                                <div class="code-header">
+                                    <div class="code-dot" style="background: #ff5f56;"></div>
+                                    <div class="code-dot" style="background: #ffbd2e;"></div>
+                                    <div class="code-dot" style="background: #27c93f;"></div>
+                                </div>
+                                <div class="code-content">
+<span class="keyword">describe</span>(<span class="string">'User Flow'</span>, () => {
+  <span class="keyword">it</span>(<span class="string">'Debe completar el checkout'</span>, () => {
+    cy.<span class="function">visit</span>(<span class="string">'/shop'</span>);
+    cy.<span class="function">get</span>(<span class="string">'.product'</span>).<span class="function">first</span>().<span class="function">click</span>();
+    cy.<span class="function">get</span>(<span class="string">'#add-to-cart'</span>).<span class="function">click</span>();
+    cy.<span class="function">get</span>(<span class="string">'.cart-total'</span>).<span class="function">should</span>(<span class="string">'be.visible'</span>);
+  });
+});</div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Performance -->
+                        <div class="slide">
+                            <div class="slide-content">
+                                <span class="project-status">Performance & Stress</span>
+                                <h3>Pruebas de Rendimiento</h3>
+                                <p>Identificación de cuellos de botella y límites del sistema bajo alta concurrencia. Calidad que no se rompe bajo presión.</p>
+                                <ul style="list-style: none; padding: 0; color: var(--color-muted); font-size: 14px;">
+                                    <li><i class="fa-solid fa-check color-primary" style="margin-right: 10px;"></i> **k6.io**: Rendimiento nativo con métricas en tiempo real.</li>
+                                    <li><i class="fa-solid fa-check color-primary" style="margin-right: 10px;"></i> **JMeter**: Pruebas de carga distribuidas y protocolos diversos.</li>
+                                </ul>
+                            </div>
+                            <div class="code-window">
+                                <div class="code-header">
+                                    <div class="code-dot" style="background: #ff5f56;"></div>
+                                    <div class="code-dot" style="background: #ffbd2e;"></div>
+                                    <div class="code-dot" style="background: #27c93f;"></div>
+                                </div>
+                                <div class="code-content">
+<span class="keyword">import</span> http <span class="keyword">from</span> <span class="string">'k6/http'</span>;
+<span class="keyword">export const</span> options = {
+  vus: <span class="string">100</span>,
+  duration: <span class="string">'30s'</span>,
+};
+<span class="keyword">export default function</span> () {
+  http.<span class="function">get</span>(<span class="string">'https://api.appdoor.com/v1'</span>);
+}</div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Gherkin BDD -->
+                        <div class="slide">
+                            <div class="slide-content">
+                                <span class="project-status">Behaviour Driven</span>
+                                <h3>Escenarios Gherkin (BDD)</h3>
+                                <p>Documentación viva y ejecutable. La comunicación entre expertos de dominio y desarrolladores mediada por lenguaje natural estructurado.</p>
+                            </div>
+                            <div class="code-window">
+                                <div class="code-header">
+                                    <div class="code-dot" style="background: #ff5f56;"></div>
+                                    <div class="code-dot" style="background: #ffbd2e;"></div>
+                                    <div class="code-dot" style="background: #27c93f;"></div>
+                                </div>
+                                <div class="code-content">
+<span class="keyword">Feature</span>: Gestión de Viajes en AppDoor
+  <span class="keyword">Scenario</span>: El conductor acepta un servicio
+    <span class="keyword">Given</span> que el conductor está en estado <span class="string">"Disponible"</span>
+    <span class="keyword">And</span> recibe una notificación de viaje cercano
+    <span class="keyword">When</span> hace clic en <span class="string">"Aceptar Viaje"</span>
+    <span class="keyword">Then</span> el estado del conductor cambia a <span class="string">"Ocupado"</span>
+    <span class="keyword">And</span> el pasajero ve la confirmación en tiempo real</div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4: AI Agents -->
+                        <div class="slide">
+                            <div class="slide-content">
+                                <span class="project-status">AI Quality Engineering</span>
+                                <h3>IA & Agentes Autónomos</h3>
+                                <p>Uso de inteligencia artificial avanzada para la orquestación y generación de pruebas dinámicas.</p>
+                                <ul style="list-style: none; padding: 0; color: var(--color-muted); font-size: 14px;">
+                                    <li><i class="fa-solid fa-bolt color-primary" style="margin-right: 10px;"></i> **Antigravity**: Agentes de codificación autónoma.</li>
+                                    <li><i class="fa-solid fa-bolt color-primary" style="margin-right: 10px;"></i> **Spec-skill-development**: Framework de habilidades especializadas.</li>
+                                    <li><i class="fa-solid fa-bolt color-primary" style="margin-right: 10px;"></i> **Github Copilot**: Pareja de programación inteligente.</li>
+                                </ul>
+                            </div>
+                            <div class="card" style="background: rgba(59, 130, 246, 0.05); border: 1px dashed var(--color-primary);">
+                                <div style="padding: 15px; text-align: center;">
+                                    <i class="fa-solid fa-robot" style="font-size: 30px; color: var(--color-primary); margin-bottom: 10px;"></i>
+                                    <p style="font-size: 13px; font-style: italic;">"Agentes autónomos optimizando la detección de anomalías y la cobertura de código en tiempo real."</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 5: Git & GitHub -->
+                        <div class="slide">
+                            <div class="slide-content">
+                                <span class="project-status">Control de Versiones</span>
+                                <h3>Git, GitHub & CI/CD</h3>
+                                <p>Gestión estratégica de repositorios y orquestación de despliegue continuo. Calidad integrada en el flujo de desarrollo desde el primer commit.</p>
+                                <ul style="list-style: none; padding: 0; color: var(--color-muted); font-size: 14px;">
+                                    <li><i class="fa-brands fa-git-alt color-primary" style="margin-right: 10px;"></i> **Git Flow**: Manejo avanzado de ramas y resolución de conflictos.</li>
+                                    <li><i class="fa-brands fa-github color-primary" style="margin-right: 10px;"></i> **GitHub Actions**: Automatización de pipelines de QA (CI/CD).</li>
+                                    <li><i class="fa-solid fa-code-pull-request color-primary" style="margin-right: 10px;"></i> **Code Review**: Estándares de calidad en Pull Requests.</li>
+                                </ul>
+                            </div>
+                            <div class="code-window">
+                                <div class="code-header">
+                                    <div class="code-dot" style="background: #ff5f56;"></div>
+                                    <div class="code-dot" style="background: #ffbd2e;"></div>
+                                    <div class="code-dot" style="background: #27c93f;"></div>
+                                </div>
+                                <div class="code-content">
+<span class="comment"># Flujo de trabajo QA en GitHub</span>
+<span class="keyword">git</span> checkout <span class="string">-b</span> feature/qa-automation
+<span class="keyword">git</span> commit <span class="string">-m</span> <span class="string">"feat: add cypress regression suite"</span>
+<span class="keyword">git</span> push origin feature/qa-automation
+
+<span class="comment"># .github/workflows/qa.yml</span>
+<span class="keyword">on</span>: [push, pull_request]
+<span class="keyword">jobs</span>:
+  <span class="keyword">test</span>:
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">steps</span>:
+      <span class="keyword">- uses</span>: actions/checkout@v3</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="slider-controls">
+                        <button class="slider-btn" onclick="moveSlider(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="slider-btn" onclick="moveSlider(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+        <footer class="footer" role="contentinfo"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+    <script>
+        let currentSlide = 0;
+        const slider = document.getElementById('labSlider');
+        const totalSlides = 5;
+
+        function moveSlider(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        // Auto-play opcional
+        // setInterval(() => moveSlider(1), 8000);
+    </script>
+</body>
+</html>

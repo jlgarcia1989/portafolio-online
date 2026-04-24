@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Contacto | Hablemos de tu Próximo Proyecto</title>
+    <meta name="description" content="¿Necesitas un QA Senior o Líder Técnico? Ponte en contacto con Julian Garcia para consultoría o vacantes estratégicas.">
+    <meta name="keywords" content="QA Senior, Engineering, Julian Garcia, Automation, Software Quality">
+    <link rel="canonical" href="https://juliangarcia-portfolio.com/contacto.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://juliangarcia-portfolio.com/contacto.html">
+    <meta property="og:title" content="Contacto | Hablemos de tu Próximo Proyecto">
+    <meta property="og:description" content="¿Necesitas un QA Senior o Líder Técnico? Ponte en contacto con Julian Garcia para consultoría o vacantes estratégicas.">
+    <meta property="og:image" content="https://juliangarcia-portfolio.com/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://juliangarcia-portfolio.com/contacto.html">
+    <meta property="twitter:title" content="Contacto | Hablemos de tu Próximo Proyecto">
+    <meta property="twitter:description" content="¿Necesitas un QA Senior o Líder Técnico? Ponte en contacto con Julian Garcia para consultoría o vacantes estratégicas.">
+    <meta property="twitter:image" content="https://juliangarcia-portfolio.com/assets/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Julian Leonardo Garcia Garzon",
+      "jobTitle": "Senior QA Specialist & Systems Engineer",
+      "url": "https://juliangarcia-portfolio.com",
+      "sameAs": [
+        "https://www.linkedin.com/in/julian-leonardo-garcia-garzon-326818146"
+      ]
+    }
+    </script>
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/sections.css">
+    
+    <!-- Iconos (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+        <header class="navbar" role="banner"></header>
+
+    <main>
+        <!-- CONTACTO -->
+        <section id="contact" class="contact section-spacing reveal-on-scroll">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Hablemos</h2>
+                    <p class="section-subtitle">¿Tienes un proyecto en mente o una vacante técnica? Estoy listo para potenciar tu equipo.</p>
+                </div>
+                <div class="contact-details">
+                    <div class="contact-info">
+                        <div class="card info-card">
+                            <div class="info-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="info-text">
+                                <h4>Ubicación</h4>
+                                <p>Calle 25ª # 45-94, Barrios Santander, Bogotá</p>
+                            </div>
+                        </div>
+                        <div class="card info-card">
+                            <div class="info-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div class="info-text">
+                                <h4>Consultas Directas</h4>
+                                <a href="tel:+573162356114">+57 316 235 6114</a>
+                            </div>
+                        </div>
+                        <div class="card info-card">
+                            <div class="info-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="info-text">
+                                <h4>Canal Oficial</h4>
+                                <a href="mailto:jlgarcia1989@hotmail.com">jlgarcia1989@hotmail.com</a>
+                            </div>
+                        </div>
+                        <div class="card info-card">
+                            <div class="info-icon">
+                                <i class="fa-brands fa-linkedin"></i>
+                            </div>
+                            <div class="info-text">
+                                <h4>LinkedIn</h4>
+                                <a href="https://www.linkedin.com/in/julian-leonardo-garcia-garzon-326818146" target="_blank">Perfil Profesional</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card contact-form">
+                        <form id="contact-form" action="#" method="POST" novalidate>
+                            <div class="form-group">
+                                <label for="name" class="form-label">Nombre</label>
+                                <input type="text" id="name" name="name" class="form-input" placeholder="Ej: Julian Garcia" required>
+                                <span class="error-message" id="error-name"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input type="email" id="email" name="email" class="form-input" placeholder="Ej: correo@ejemplo.com" required>
+                                <span class="error-message" id="error-email"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Teléfono</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" placeholder="Ej: 3162356114" required>
+                                <span class="error-message" id="error-phone"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="message" class="form-label">Mensaje <span class="char-counter" id="char-counter">(0/500)</span></label>
+                                <textarea id="message" name="message" rows="4" class="form-textarea" maxlength="500" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                                <span class="error-message" id="error-message"></span>
+                            </div>
+                            <button type="submit" id="btn-submit" class="btn btn-solid"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de éxito -->
+    <div id="success-modal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3>¡Mensaje enviado!</h3>
+            <p>Hemos recibido tu solicitud de contacto con éxito.</p>
+            <button class="btn btn-solid modal-accept" id="modal-accept-btn">Aceptar</button>
+        </div>
+    </div>
+
+        <footer class="footer" role="contentinfo"></footer>
+
+    <!-- Scripts (Módulos) -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

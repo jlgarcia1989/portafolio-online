@@ -1,0 +1,19 @@
+{
+  "name": "julian-garcia-portfolio",
+  "version": "1.0.0",
+  "description": "Professional Portfolio with Automated CV Generation",
+  "main": "js/main.js",
+  "scripts": {
+    "sync-cv": "node scripts/scrape-to-airtable.js && node scripts/generate-pdf.js",
+    "generate-cv": "node scripts/generate-pdf.js",
+    "dev": "live-server ."
+  },
+  "dependencies": {
+    "puppeteer": "^24.15.0",
+    "axios": "^1.6.0",
+    "jsdom": "^22.1.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

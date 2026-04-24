@@ -1,0 +1,35 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+build/
+
+# IDE files
+.vscode/
+.idea/
+.project
+.settings/
+.agents/
+.claude/
+.junie/
+.sixth/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and Scratch
+.env
+.env.local
+js/config.local.js
+scratch/
+brain/
+artifacts/
+temp/

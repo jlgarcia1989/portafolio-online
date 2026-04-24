@@ -1,0 +1,6 @@
+# Robots.txt for Julian Garcia Portfolio
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://juliangarcia-portfolio.com/sitemap.xml

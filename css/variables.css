@@ -1,0 +1,26 @@
+/**
+ * Definición de la paleta de colores y variables globales del proyecto.
+ * Cumple con la regla de estructura-estilos-css.md.
+ */
+:root {
+    /* Colores Principales Originales (Blue Theme) */
+    --color-bg: #030303;
+    --color-primary: #3b82f6;
+    --color-accent: #1d4ed8;
+    --color-text: #ffffff;
+    --color-muted: #888888;
+    --color-card: #0c0c0c;
+    --color-card-hover: #141414;
+
+    /* Gradientes y Efectos */
+    --bg-secondary: #080808;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --border-color: rgba(255, 255, 255, 0.05);
+    --border-light: rgba(255, 255, 255, 0.1);
+    
+    /* Espaciado Adaptable (Manteniendo Responsive) */
+    --spacing-lg: clamp(60px, 10vw, 120px);
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --radius-lg: 20px;
+}
+
