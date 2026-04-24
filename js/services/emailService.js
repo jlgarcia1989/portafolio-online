@@ -81,43 +81,58 @@ class EmailService {
         `;
     }
 
+    /**
+     * Envía un correo de notificación al admin con los datos del formulario.
+     * Usa el proxy del backend en producción (server.js /api/send-email).
+     * Fallback: SDK de EmailJS si hay credenciales locales configuradas.
+     *
+     * Variables requeridas en el template de EmailJS:
+     *   {{from_name}}  - Nombre del contacto
+     *   {{from_email}} - Email del contacto
+     *   {{phone}}      - Teléfono del contacto
+     *   {{message}}    - Mensaje enviado
+     *
+     * @param {Object} data - { name, email, phone, message }
+     */
     async sendEmails(data) {
-        const paramsAdmin = {
-            to_email: this.adminEmail,
-            message_html: this._getHtmlTemplate(data, true)
-        };
-
-        const paramsClient = {
-            to_email: data.email,
-            message_html: this._getHtmlTemplate(data, false)
+        const templateParams = {
+            from_name: data.name,
+            from_email: data.email,
+            phone: data.phone || 'N/A',
+            message: data.message,
+            to_email: this.adminEmail
         };
 
         try {
-            // Intento 1: Usar el proxy del backend (producción segura, oculta las credenciales)
-            const res1 = await fetch('/api/send-email', {
+            // Intento 1: Proxy del backend (producción segura - usa env vars del servidor)
+            const res = await fetch('/api/send-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ template_params: paramsAdmin })
-            });
-            const res2 = await fetch('/api/send-email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ template_params: paramsClient })
+                body: JSON.stringify(templateParams)
             });
 
-            if (!res1.ok || !res2.ok) {
-                // Intento 2: Si el proxy falla (ej. localhost sin backend .env), usar EmailJS SDK
-                if (typeof emailjs !== 'undefined' && this.config.PUBLIC_KEY && !this.config.PUBLIC_KEY.includes('TU_')) {
-                    console.warn('[EmailService] Fallback a EmailJS SDK local...');
-                    await Promise.all([
-                        emailjs.send(this.config.SERVICE_ID, this.config.TEMPLATE_ID, paramsAdmin, this.config.PUBLIC_KEY),
-                        emailjs.send(this.config.SERVICE_ID, this.config.TEMPLATE_ID, paramsClient, this.config.PUBLIC_KEY)
-                    ]);
-                    return true;
-                }
-                throw new Error('Email Proxy Failed and SDK not configured');
+            if (res.ok) {
+                console.log('[EmailService] Correo enviado via proxy.');
+                return true;
             }
-            return true;
+
+            const errBody = await res.json().catch(() => ({ raw: res.status }));
+            console.warn('[EmailService] Proxy error:', errBody);
+
+            // Intento 2 (fallback local): SDK de EmailJS
+            if (typeof emailjs !== 'undefined' && this.config.PUBLIC_KEY && !this.config.PUBLIC_KEY.includes('TU_')) {
+                console.warn('[EmailService] Usando SDK local como fallback...');
+                await emailjs.send(
+                    this.config.SERVICE_ID,
+                    this.config.TEMPLATE_ID,
+                    templateParams,
+                    this.config.PUBLIC_KEY
+                );
+                return true;
+            }
+
+            throw new Error(`Email Proxy responded with ${res.status}: ${JSON.stringify(errBody)}`);
+
         } catch (error) {
             console.error('[EmailService] Fail:', error);
             throw error;
