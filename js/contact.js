@@ -100,13 +100,17 @@ export class ContactForm {
         this.setLoading(true);
 
         try {
-            // Ejecutamos Airtable y EmailJS
-            // Si EmailJS no está configurado, solo muestra un warning y permite que Airtable guarde el registro.
-            const airtablePromise = this.sendToAirtable(formData);
+            // Ejecutamos Airtable y EmailJS de forma robusta
+            const airtablePromise = this.sendToAirtable(formData).catch(err => {
+                console.warn('[Airtable] Falló al guardar (Omitido):', err);
+            });
+            
             const emailPromise = emailService.sendEmails(formData).catch(err => {
-                console.warn('[EmailService] Omitido - Posible falta de credenciales:', err);
+                console.warn('[EmailService] Falló al enviar:', err);
+                throw new Error('No se pudo enviar el correo.');
             });
 
+            // Si Email falla, se va al catch general. Si Airtable falla, simplemente avisa y sigue.
             await Promise.all([airtablePromise, emailPromise]);
             
             this.form.reset();
@@ -115,7 +119,7 @@ export class ContactForm {
 
         } catch (error) {
             console.error('Error Crítico:', error);
-            this.setError('message', 'Error al enviar. Revisa la consola.');
+            this.setError('message', 'Error al enviar. Revisa que los servicios estén configurados.');
         } finally {
             this.setLoading(false);
         }

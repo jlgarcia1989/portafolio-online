@@ -63,6 +63,38 @@ app.post('/api/airtable/:tableId', async (req, res) => {
     }
 });
 
+// API Proxy POST for EmailJS (Protects the EmailJS Keys for production)
+app.post('/api/send-email', async (req, res) => {
+    try {
+        const SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
+        const TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
+        const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
+
+        // Validamos si están las variables
+        if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+            return res.status(500).json({ error: "EmailJS API Keys not configured on the server." });
+        }
+
+        const payload = {
+            service_id: SERVICE_ID,
+            template_id: TEMPLATE_ID,
+            user_id: PUBLIC_KEY,
+            template_params: req.body.template_params
+        };
+
+        const response = await axios.post(`https://api.emailjs.com/api/v1.0/email/send`, payload, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        res.json({ success: true, data: response.data });
+    } catch (error) {
+        console.error("EmailJS Proxy POST Error:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ error: "Failed to send email via EmailJS" });
+    }
+});
+
 // Fallback to index.html for SPA routing (if needed)
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));

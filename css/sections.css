@@ -290,6 +290,12 @@ main > section:first-child.section-spacing {
 @media (max-width: 968px) {
     .contact-details {
         grid-template-columns: 1fr;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .contact-info {
+        justify-content: center;
     }
 }
 

@@ -10,7 +10,7 @@ class EmailService {
     }
 
     _getHtmlTemplate(data, isForAdmin = true) {
-        const accentColor = '#e50914'; // Rojo corporativo
+        const accentColor = '#3b82f6'; // Azul corporativo (var--color-primary)
         const bgColor = '#050505';
         const cardColor = '#0a0a0a';
         
@@ -82,8 +82,6 @@ class EmailService {
     }
 
     async sendEmails(data) {
-        if (typeof emailjs === 'undefined') throw new Error('Engine Fail');
-
         const paramsAdmin = {
             to_email: this.adminEmail,
             message_html: this._getHtmlTemplate(data, true)
@@ -95,10 +93,30 @@ class EmailService {
         };
 
         try {
-            await Promise.all([
-                emailjs.send(this.config.SERVICE_ID, this.config.TEMPLATE_ID, paramsAdmin, this.config.PUBLIC_KEY),
-                emailjs.send(this.config.SERVICE_ID, this.config.TEMPLATE_ID, paramsClient, this.config.PUBLIC_KEY)
-            ]);
+            // Intento 1: Usar el proxy del backend (producción segura, oculta las credenciales)
+            const res1 = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ template_params: paramsAdmin })
+            });
+            const res2 = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ template_params: paramsClient })
+            });
+
+            if (!res1.ok || !res2.ok) {
+                // Intento 2: Si el proxy falla (ej. localhost sin backend .env), usar EmailJS SDK
+                if (typeof emailjs !== 'undefined' && this.config.PUBLIC_KEY && !this.config.PUBLIC_KEY.includes('TU_')) {
+                    console.warn('[EmailService] Fallback a EmailJS SDK local...');
+                    await Promise.all([
+                        emailjs.send(this.config.SERVICE_ID, this.config.TEMPLATE_ID, paramsAdmin, this.config.PUBLIC_KEY),
+                        emailjs.send(this.config.SERVICE_ID, this.config.TEMPLATE_ID, paramsClient, this.config.PUBLIC_KEY)
+                    ]);
+                    return true;
+                }
+                throw new Error('Email Proxy Failed and SDK not configured');
+            }
             return true;
         } catch (error) {
             console.error('[EmailService] Fail:', error);
