@@ -71,9 +71,20 @@
 .profile-container {
     width: 100%;
     max-width: 400px;
-    aspect-ratio: 4/5;
+    /* Fallback para Safari < 15 que no soporta aspect-ratio */
+    padding-bottom: 125%; /* equivalente a 4/5 */
+    height: 0;
     position: relative;
     z-index: 2;
+}
+
+/* Soporte nativo en browsers modernos */
+@supports (aspect-ratio: 4/5) {
+    .profile-container {
+        aspect-ratio: 4/5;
+        padding-bottom: 0;
+        height: auto;
+    }
 }
 
 .profile-img {
@@ -82,9 +93,20 @@
     object-fit: cover;
     border-radius: 32px;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-    position: relative;
+    /* Posición absoluta para el fallback de padding-bottom */
+    position: absolute;
+    top: 0;
+    left: 0;
     z-index: 2;
     transition: var(--transition-smooth);
+}
+
+@supports (aspect-ratio: 4/5) {
+    .profile-img {
+        position: relative;
+        top: auto;
+        left: auto;
+    }
 }
 
 .profile-img:hover {
@@ -203,8 +225,11 @@ main > section:first-child.section-spacing {
 }
 
 .experience-projects {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: -webkit-box;      /* Safari legacy */
+    display: -webkit-flex;     /* Safari 6.1+ */
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
     gap: 20px;
 }
 
@@ -388,7 +413,12 @@ main > section:first-child.section-spacing {
         overflow-y: visible;
         padding-right: 0;
     }
-    
+
+    /* Safari iOS: evitar que las cards se corten */
+    .experience-projects {
+        width: 100%;
+    }
+
     main > section:first-child.section-spacing {
         padding-top: 110px;
     }

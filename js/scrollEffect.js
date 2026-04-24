@@ -1,28 +1,38 @@
 /**
  * Gestiona los efectos de revelación de elementos al hacer scroll.
  * Utiliza Intersection Observer para detectar cuándo una sección entra en el viewport.
- * Sigue el principio de Open/Closed al permitir cualquier selector para la revelación.
+ * Fix: threshold reducido a 0 + rootMargin para garantizar visibilidad en mobile
+ * donde secciones largas nunca alcanzarían un threshold mayor.
+ * Fallback incluido para browsers sin soporte de IntersectionObserver (Safari < 12.1).
  */
 export class ScrollEffect {
     /**
-     * Crea una instancia del efecto de scroll para los selectores indicados.
      * @param {string} selector - Selector CSS de los elementos a animar.
      * @example
      * const reveal = new ScrollEffect('.reveal-on-scroll');
      */
     constructor(selector) {
         this.sections = document.querySelectorAll(selector);
+        // threshold:0 = se activa al primer píxel visible (crucial en mobile con secciones largas)
+        // rootMargin:'0px 0px -50px 0px' = pequeño margen para evitar revelar demasiado pronto
         this.observerOptions = {
             root: null,
-            threshold: 0.15,
+            threshold: 0,
+            rootMargin: '0px 0px -50px 0px',
         };
         this.init();
     }
 
     /**
-     * Inicializa el observador de intersección.
+     * Inicializa el observador. Si no hay soporte (Safari < 12.1), revela todos inmediatamente.
      */
     init() {
+        // Fallback para browsers sin IntersectionObserver
+        if (!('IntersectionObserver' in window)) {
+            this.sections.forEach(section => this.reveal(section));
+            return;
+        }
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -39,18 +49,18 @@ export class ScrollEffect {
     }
 
     /**
-     * Prepara el elemento con estilos iniciales antes de la animación.
-     * @param {HTMLElement} element - El elemento a preparar.
+     * Prepara el elemento con estilos iniciales (invisible, desplazado hacia abajo).
+     * @param {HTMLElement} element
      */
     prepare(element) {
         element.style.opacity = '0';
         element.style.transform = 'translateY(30px)';
-        element.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        element.style.transition = 'opacity 0.7s ease-out, transform 0.7s ease-out';
     }
 
     /**
-     * Realiza la animación de revelación del elemento.
-     * @param {HTMLElement} element - El elemento a revelar.
+     * Ejecuta la animación de revelación.
+     * @param {HTMLElement} element
      */
     reveal(element) {
         element.style.opacity = '1';
