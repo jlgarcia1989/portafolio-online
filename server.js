@@ -82,6 +82,10 @@ app.post('/api/send-email', async (req, res) => {
             template_params: req.body.template_params
         };
 
+        if (process.env.EMAILJS_PRIVATE_KEY) {
+            payload.accessToken = process.env.EMAILJS_PRIVATE_KEY;
+        }
+
         const response = await axios.post(`https://api.emailjs.com/api/v1.0/email/send`, payload, {
             headers: {
                 'Content-Type': 'application/json'
