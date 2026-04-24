@@ -76,27 +76,37 @@ app.get('/api/emailjs-config', (req, res) => {
     res.json({ SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY });
 });
 
-// Genera el HTML de notificación de lead para el correo
-function buildEmailHtml({ from_name, from_email, phone, message }) {
+// Genera el HTML profesional para los correos (Notificación y Confirmación)
+function buildEmailHtml({ from_name, from_email, phone, message, isAutoReply = false }) {
     const accent = '#3b82f6';
     const year   = new Date().getFullYear();
+    
+    const title = isAutoReply ? 'CONFIRMACIÓN RECIBIDA' : 'NOTIFICACIÓN DE LEAD';
+    const subtitle = isAutoReply 
+        ? `Hola ${from_name.split(' ')[0]}, he recibido tu mensaje correctamente.` 
+        : 'Oportunidad Estratégica Detectada';
+    
+    const bodyText = isAutoReply
+        ? 'Gracias por contactarme a través de mi portafolio profesional. En breve me pondré en contacto contigo para discutir tu propuesta.'
+        : `Hola Julian, se ha generado una nueva interacción desde tu portafolio profesional por parte de <strong>${from_name}</strong>.`;
+
     return `
 <div style="background:#050505;padding:40px 10px;font-family:'Segoe UI',Roboto,Arial,sans-serif;color:#fff;">
   <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"
-    style="max-width:600px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:16px;overflow:hidden;">
+    style="max-width:600px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
     <!-- HEADER -->
     <tr>
       <td style="padding:28px 36px;border-bottom:1px solid #1a1a1a;">
         <span style="font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px;">JG<span style="color:${accent};">.</span></span>
-        <span style="float:right;font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:2px;padding-top:8px;">NOTIFICACIÓN DE LEAD</span>
+        <span style="float:right;font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:2px;padding-top:8px;">${title}</span>
       </td>
     </tr>
     <!-- HERO -->
     <tr>
       <td style="padding:36px 36px 20px;">
-        <h2 style="margin:0;font-size:24px;font-weight:700;color:#fff;">Oportunidad Estratégica Detectada</h2>
+        <h2 style="margin:0;font-size:24px;font-weight:700;color:#fff;">${subtitle}</h2>
         <p style="margin:14px 0 0;font-size:15px;color:#888;line-height:1.6;">
-          Hola Julian, se ha generado una nueva interacción desde tu portafolio profesional.
+          ${bodyText}
         </p>
       </td>
     </tr>
@@ -106,18 +116,18 @@ function buildEmailHtml({ from_name, from_email, phone, message }) {
         <div style="background:linear-gradient(145deg,#0f0f0f,#080808);border:1px solid #222;border-radius:12px;padding:24px;">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr><td style="padding-bottom:14px;">
-              <div style="font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:1px;">Interesado</div>
+              <div style="font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:1px;">Detalles del Contacto</div>
               <div style="font-size:16px;color:#fff;font-weight:600;margin-top:4px;">${from_name}</div>
             </td></tr>
             <tr><td style="padding-bottom:14px;">
-              <div style="font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:1px;">Canal de Contacto</div>
+              <div style="font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:1px;">Canal de Respuesta</div>
               <div style="font-size:14px;color:#ccc;margin-top:4px;">
                 <a href="mailto:${from_email}" style="color:${accent};text-decoration:none;">${from_email}</a>
-                &nbsp;•&nbsp;${phone || 'N/A'}
+                ${phone ? `&nbsp;•&nbsp;${phone}` : ''}
               </div>
             </td></tr>
             <tr><td style="padding-top:14px;border-top:1px solid #1a1a1a;">
-              <div style="font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:1px;">Mensaje Estratégico</div>
+              <div style="font-size:10px;color:${accent};font-weight:800;text-transform:uppercase;letter-spacing:1px;">Contenido del Mensaje</div>
               <div style="font-size:15px;color:#fff;line-height:1.5;margin-top:8px;font-style:italic;">"${message}"</div>
             </td></tr>
           </table>
@@ -136,13 +146,12 @@ function buildEmailHtml({ from_name, from_email, phone, message }) {
 </div>`;
 }
 
-// API Proxy POST para EmailJS — genera el HTML en el servidor y lo envía como message_html
-// El template en EmailJS debe tener {{{message_html}}} en el body (triple llave = HTML sin escapar)
-// Recibe: { to_email, from_name, from_email, phone, message }
+// API Proxy POST para EmailJS
 app.post('/api/send-email', async (req, res) => {
     try {
         const SERVICE_ID  = process.env.EMAILJS_SERVICE_ID;
         const TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
+        const AUTOREPLY_TEMPLATE_ID = process.env.EMAILJS_AUTOREPLY_TEMPLATE_ID || TEMPLATE_ID;
         const PUBLIC_KEY  = process.env.EMAILJS_PUBLIC_KEY;
         const PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY;
 
@@ -152,30 +161,54 @@ app.post('/api/send-email', async (req, res) => {
 
         const { to_email, from_name, from_email, phone, message } = req.body;
 
-        if (!to_email || !from_name || !from_email || !message) {
+        if (!from_name || !from_email || !message) {
             return res.status(400).json({ error: 'Missing required fields.' });
         }
 
-        const payload = {
+        // 1. Notificación para Julian (jlgarcia1989@hotmail.com)
+        const adminPayload = {
             service_id:  SERVICE_ID,
             template_id: TEMPLATE_ID,
             user_id:     PUBLIC_KEY,
             ...(PRIVATE_KEY && { accessToken: PRIVATE_KEY }),
             template_params: {
-                to_email,
+                to_email: to_email || 'jlgarcia1989@hotmail.com',
                 from_name,
                 from_email,
                 phone: phone || 'N/A',
                 message,
-                message_html: buildEmailHtml({ from_name, from_email, phone, message })
+                message_html: buildEmailHtml({ from_name, from_email, phone, message, isAutoReply: false })
             }
         };
 
-        const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', payload, {
-            headers: { 'Content-Type': 'application/json' }
+        // 2. Confirmación para el Usuario (Auto-reply)
+        const userPayload = {
+            service_id:  SERVICE_ID,
+            template_id: AUTOREPLY_TEMPLATE_ID,
+            user_id:     PUBLIC_KEY,
+            ...(PRIVATE_KEY && { accessToken: PRIVATE_KEY }),
+            template_params: {
+                to_email: from_email,
+                from_name,
+                from_email,
+                phone: phone || 'N/A',
+                message,
+                message_html: buildEmailHtml({ from_name, from_email, phone, message, isAutoReply: true })
+            }
+        };
+
+        // Enviamos ambos correos en paralelo para eficiencia
+        const [adminRes, userRes] = await Promise.all([
+            axios.post('https://api.emailjs.com/api/v1.0/email/send', adminPayload, { headers: { 'Content-Type': 'application/json' } }),
+            axios.post('https://api.emailjs.com/api/v1.0/email/send', userPayload, { headers: { 'Content-Type': 'application/json' } })
+        ]);
+
+        res.json({ 
+            success: true, 
+            notification: adminRes.data,
+            confirmation: userRes.data
         });
 
-        res.json({ success: true, status: response.data });
     } catch (error) {
         const errMsg = error.response?.data || error.message;
         console.error('[EmailJS Proxy Error]:', errMsg);

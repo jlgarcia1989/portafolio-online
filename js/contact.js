@@ -134,20 +134,36 @@ export class ContactForm {
     }
 
     async sendToAirtable(data) {
-        // Fallback en caso de que config.js siga teniendo el valor por defecto
+        // En producción (Render), el tableId debería venir de las variables de entorno si se expusieran,
+        // pero aquí usamos el nombre real de la tabla en Airtable.
         let tableId = CONFIG.AIRTABLE.TABLE_ID;
-        if (!tableId || tableId.includes('TU_')) tableId = 'Contactos';
+        if (!tableId || tableId.includes('TU_')) {
+            tableId = 'Contact Form Submissions'; // Nombre exacto en la base de Julian
+        }
 
         const url = `/api/airtable/${tableId}`;
         const payload = {
-            records: [{ fields: { Name: data.name, Email: data.email, Phone: data.phone, Message: data.message } }]
+            records: [{ 
+                fields: { 
+                    "Name": data.name, 
+                    "Email": data.email, 
+                    "Phone": data.phone, 
+                    "Message": data.message 
+                } 
+            }]
         };
+        
         const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('Airtable Fail');
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            console.error('[Airtable Error]:', err);
+            throw new Error('Error al guardar en Airtable');
+        }
         return res.json();
     }
 
