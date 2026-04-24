@@ -6,7 +6,7 @@ import { CONFIG } from '../config.js';
 class EmailService {
     constructor() {
         this.config = CONFIG.EMAILJS;
-        this.adminEmail = 'jlgarcia1989@hotmail.com';
+        this.adminEmail = 'jlgarcia198909@gmail.com';
     }
 
     _getHtmlTemplate(data, isForAdmin = true) {
