@@ -63,13 +63,27 @@ app.post('/api/airtable/:tableId', async (req, res) => {
     }
 });
 
-// API Proxy POST for EmailJS (Protects the EmailJS Keys for production)
-// Recibe: { to_email, from_name, from_email, phone, message, is_admin }
+// Endpoint: expone credenciales públicas de EmailJS al frontend (SDK del navegador)
+// El PUBLIC_KEY de EmailJS es seguro de exponer según la documentación oficial de EmailJS.
+app.get('/api/emailjs-config', (req, res) => {
+    const SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
+    const TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
+    const PUBLIC_KEY  = process.env.EMAILJS_PUBLIC_KEY;
+
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+        return res.status(500).json({ error: 'EmailJS not configured' });
+    }
+    res.json({ SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY });
+});
+
+// API Proxy POST for EmailJS (non-browser environments must be enabled in EmailJS dashboard)
+// Recibe: { to_email, from_name, from_email, phone, message }
 app.post('/api/send-email', async (req, res) => {
     try {
-        const SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
-        const TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
-        const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
+        const SERVICE_ID   = process.env.EMAILJS_SERVICE_ID;
+        const TEMPLATE_ID  = process.env.EMAILJS_TEMPLATE_ID;
+        const PUBLIC_KEY   = process.env.EMAILJS_PUBLIC_KEY;
+        const PRIVATE_KEY  = process.env.EMAILJS_PRIVATE_KEY; // Requerido con "Use Private Key" activo
 
         if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
             return res.status(500).json({ error: "EmailJS keys not configured on the server." });
@@ -85,6 +99,7 @@ app.post('/api/send-email', async (req, res) => {
             service_id: SERVICE_ID,
             template_id: TEMPLATE_ID,
             user_id: PUBLIC_KEY,
+            accessToken: PRIVATE_KEY || undefined, // Solo se incluye si está configurado
             template_params: {
                 to_email,
                 from_name,

@@ -82,15 +82,13 @@ class EmailService {
     }
 
     /**
-     * Envía un correo de notificación al admin con los datos del formulario.
-     * Usa el proxy del backend en producción (server.js /api/send-email).
-     * Fallback: SDK de EmailJS si hay credenciales locales configuradas.
+     * Envía correo de notificación al admin.
+     * Estrategia:
+     *   1. Proxy del backend (/api/send-email) - seguro para producción
+     *   2. SDK EmailJS del navegador            - fallback si EmailJS bloquea non-browser
      *
      * Variables requeridas en el template de EmailJS:
-     *   {{from_name}}  - Nombre del contacto
-     *   {{from_email}} - Email del contacto
-     *   {{phone}}      - Teléfono del contacto
-     *   {{message}}    - Mensaje enviado
+     *   {{from_name}}, {{from_email}}, {{phone}}, {{message}}
      *
      * @param {Object} data - { name, email, phone, message }
      */
@@ -103,8 +101,8 @@ class EmailService {
             to_email: this.adminEmail
         };
 
+        // Intento 1: Proxy del backend
         try {
-            // Intento 1: Proxy del backend (producción segura - usa env vars del servidor)
             const res = await fetch('/api/send-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -112,31 +110,34 @@ class EmailService {
             });
 
             if (res.ok) {
-                console.log('[EmailService] Correo enviado via proxy.');
+                console.log('[EmailService] Correo enviado vía proxy backend.');
                 return true;
             }
 
             const errBody = await res.json().catch(() => ({ raw: res.status }));
-            console.warn('[EmailService] Proxy error:', errBody);
+            console.warn('[EmailService] Proxy backend falló - intentando SDK...', errBody);
+        } catch (fetchErr) {
+            console.warn('[EmailService] No se pudo alcanzar el proxy:', fetchErr.message);
+        }
 
-            // Intento 2 (fallback local): SDK de EmailJS
-            if (typeof emailjs !== 'undefined' && this.config.PUBLIC_KEY && !this.config.PUBLIC_KEY.includes('TU_')) {
-                console.warn('[EmailService] Usando SDK local como fallback...');
+        // Intento 2: SDK de EmailJS (llamada desde el navegador, siempre permitida)
+        if (typeof emailjs !== 'undefined' && this.config.PUBLIC_KEY && !this.config.PUBLIC_KEY.includes('TU_')) {
+            try {
                 await emailjs.send(
                     this.config.SERVICE_ID,
                     this.config.TEMPLATE_ID,
                     templateParams,
                     this.config.PUBLIC_KEY
                 );
+                console.log('[EmailService] Correo enviado vía SDK.');
                 return true;
+            } catch (sdkErr) {
+                console.error('[EmailService] SDK falló:', sdkErr);
+                throw sdkErr;
             }
-
-            throw new Error(`Email Proxy responded with ${res.status}: ${JSON.stringify(errBody)}`);
-
-        } catch (error) {
-            console.error('[EmailService] Fail:', error);
-            throw error;
         }
+
+        throw new Error('No hay mecanismo disponible para enviar el correo. Revisa las credenciales de EmailJS.');
     }
 }
 
