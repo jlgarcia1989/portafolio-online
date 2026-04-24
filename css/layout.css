@@ -150,6 +150,9 @@
     cursor: pointer;
     gap: 6px;
     z-index: 1001;
+    background: transparent;
+    border: none;
+    padding: 5px;
 }
 
 .bar {

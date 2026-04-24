@@ -206,7 +206,7 @@
 @media (max-width: 600px) {
     .contact-form {
         padding: 20px;
-        margin: 20px;
+        margin: 0;
     }
 }
 

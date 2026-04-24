@@ -26,6 +26,12 @@
     font-weight: 600;
 }
 
+.subtitle-break { display: none; }
+@media (max-width: 768px) {
+    .subtitle-separator { display: none; }
+    .subtitle-break { display: block; height: 5px; }
+}
+
 .hero-name {
     font-size: 32px;
     margin-bottom: 15px;
@@ -99,6 +105,10 @@
 
 .section-spacing {
     padding: var(--spacing-lg) 20px;
+}
+
+main > section:first-child.section-spacing {
+    padding-top: 140px;
 }
 
 /* About Section */
@@ -313,6 +323,10 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 30px;
     }
+    
+    main > section:first-child.section-spacing {
+        padding-top: 120px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -367,6 +381,10 @@
         max-height: none;
         overflow-y: visible;
         padding-right: 0;
+    }
+    
+    main > section:first-child.section-spacing {
+        padding-top: 110px;
     }
 }
 

@@ -38,6 +38,31 @@ app.get('/api/airtable/:tableId', async (req, res) => {
     }
 });
 
+// API Proxy POST for Airtable (Protects the API Key for forms)
+app.post('/api/airtable/:tableId', async (req, res) => {
+    try {
+        const { tableId } = req.params;
+        const BASE_ID = process.env.AIRTABLE_BASE_ID || "appFrdklAuLWDpjSQ";
+        const API_KEY = process.env.AIRTABLE_API_KEY;
+
+        if (!API_KEY) {
+            return res.status(500).json({ error: "Airtable API Key not configured on the server." });
+        }
+
+        const response = await axios.post(`https://api.airtable.com/v0/${BASE_ID}/${tableId}`, req.body, {
+            headers: {
+                'Authorization': `Bearer ${API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error("Airtable Proxy POST Error:", error.response?.data || error.message);
+        res.status(error.response?.status || 500).json({ error: "Failed to post data to Airtable" });
+    }
+});
+
 // Fallback to index.html for SPA routing (if needed)
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));

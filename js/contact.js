@@ -101,18 +101,20 @@ export class ContactForm {
 
         try {
             // Ejecutamos Airtable y EmailJS
-            // El duplicado ocurre porque enviamos Admin + Cliente.
-            await Promise.all([
-                this.sendToAirtable(formData),
-                emailService.sendEmails(formData)
-            ]);
+            // Si EmailJS no está configurado, solo muestra un warning y permite que Airtable guarde el registro.
+            const airtablePromise = this.sendToAirtable(formData);
+            const emailPromise = emailService.sendEmails(formData).catch(err => {
+                console.warn('[EmailService] Omitido - Posible falta de credenciales:', err);
+            });
+
+            await Promise.all([airtablePromise, emailPromise]);
             
             this.form.reset();
             this.updateCharCounter();
             this.showSuccess();
 
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error Crítico:', error);
             this.setError('message', 'Error al enviar. Revisa la consola.');
         } finally {
             this.setLoading(false);
@@ -128,14 +130,17 @@ export class ContactForm {
     }
 
     async sendToAirtable(data) {
-        const { API_KEY, BASE_ID, TABLE_ID } = CONFIG.AIRTABLE;
-        const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
+        // Fallback en caso de que config.js siga teniendo el valor por defecto
+        let tableId = CONFIG.AIRTABLE.TABLE_ID;
+        if (!tableId || tableId.includes('TU_')) tableId = 'Contactos';
+
+        const url = `/api/airtable/${tableId}`;
         const payload = {
             records: [{ fields: { Name: data.name, Email: data.email, Phone: data.phone, Message: data.message } }]
         };
         const res = await fetch(url, {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
         if (!res.ok) throw new Error('Airtable Fail');
